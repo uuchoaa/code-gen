@@ -1,0 +1,206 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'User and Videobots API'
+servers:
+  - url: 'http://api.example.com' # Replace with your actual server URL
+paths:
+  /user_sessions:
+    post:
+      tags:
+        - 'User Sessions'
+      summary: 'Create a user session'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSessionRequest'
+      responses:
+        '200':
+          description: 'Successfully created user session'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSessionResponse'
+  /user_sessions/{id}/password:
+    post:
+      tags:
+        - 'Authentication'
+      summary: 'Authenticate a user session with password and optionally with two-factor code'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: 'The ID of the user session'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordAuthenticationRequest'
+      responses:
+        '200':
+          description: 'Successfully authenticated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticatedUser'
+  /videobots:
+    get:
+      tags:
+        - 'Videobots'
+      summary: 'Retrieve a list of videobots'
+      responses:
+        '200':
+          description: 'Successfully retrieved videobots'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Videobot'
+  /videobots/{id}/mailings:
+    get:
+      tags:
+        - 'Mailings'
+      summary: 'Retrieve mailings for a specific videobot'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: 'The ID of the videobot'
+      responses:
+        '200':
+          description: 'Successfully retrieved mailings'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Mailing'
+    post:
+      tags:
+        - 'Mailings'
+      summary: 'Create a mailing for a specific videobot'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: 'The ID of the videobot'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mailing'
+      responses:
+        '201':
+          description: 'Successfully created mailing'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mailing'
+  /videobots/{id}/people:
+    get:
+      tags:
+        - 'People'
+      summary: 'Retrieve people associated with a specific videobot'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: 'The ID of the videobot'
+      responses:
+        '200':
+          description: 'Successfully retrieved people'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Person'
+components:
+  schemas:
+    UserSessionRequest:
+      type: 'object'
+      properties:
+        email:
+          type: 'string'
+          format: 'email'
+    UserSessionResponse:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+        email:
+          type: 'string'
+          format: 'email'
+        auth_strategies:
+          type: 'array'
+          items:
+            type: 'string'
+    PasswordAuthenticationRequest:
+      type: 'object'
+      properties:
+        password:
+          type: 'string'
+        two_factor_code:
+          type: 'string'
+    AuthenticatedUser:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+        name:
+          type: 'string'
+        email:
+          type: 'string'
+          format: 'email'
+        project_id:
+          type: 'string'
+        authentication_token:
+          type: 'string'
+    Videobot:
+      type: 'object'
+      properties:
+        name:
+          type: 'string'
+        description:
+          type: 'string'
+        thumbnail_url:
+          type: 'string'
+          format: 'uri'
+    Mailing:
+      type: 'object'
+      properties:
+        name:
+          type: 'string'
+        file_url:
+          type: 'string'
+          format: 'uri'
+    Person:
+      type: 'object'
+      properties:
+        id:
+          type: 'string'
+        PS_CPF:
+          type: 'string'
+        PS_NAME:
+          type: 'string'
+tags:
+  - name: 'User Sessions'
+    description: 'Operations related to user sessions'
+  - name: 'Authentication'
+    description: 'Operations related to authentication'
+  - name: 'Videobots'
+    description: 'Operations related to videobots'
+  - name: 'Mailings'
+    description: 'Operations related to videobot mailings'
+  - name: 'People'
+    description: 'Operations related to videobot people'

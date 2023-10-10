@@ -1,0 +1,58 @@
+endpoints:
+  - path:
+      post /user_sessions
+    request_example:
+      email: 'user@email.com'
+    response_example:
+      - id: '123123'
+        email: 'user@email.com'
+        auth_strategies: ['password']
+      - id: '123123'
+        email: 'user@email.com'
+        auth_strategies: ['password', 'two_factor']
+    description: Creates a user session and returns the user authentication strategies available
+
+  - path:
+      post /user_sessions/{id}/password
+    request_example:
+      - password: 's3cR3tY'
+      - password: 's3cR3tY'
+        two_factor_code: '123456'
+    response_example:
+      id: '123'
+      name: 'Rafael'
+      email: 'user@email.com'
+      project_id: '123'
+      authentication_token: 'string'
+
+  - path:
+      get /videobots 
+    response_example:
+      - name: 'Porto Oferta'
+        description: 'Video oferta da Porto RH'
+        thumbnail_url: 'https://path.to/image'
+
+  - path:
+      get /videobots/{id}/mailings
+    response_example:
+      - name: 'Mailing teste'
+        file_url: 'https://path.to/spreadsheet'
+
+  - path:
+      post /videobots/{id}/mailings
+    request_example:
+      name: 'Mailing teste'
+      file_url: 'https://path.to/spreadsheet'
+    response_example: 
+      201:
+        name: 'Mailing teste'
+        file_url: 'https://path.to/spreadsheet'
+      
+  - path:
+      get /videobots/{id}/people
+    response_example: 
+      200:
+        - id: '123123'
+          PS_CPF: '00000000'
+          PS_NAME: 'Pedro'
+      
